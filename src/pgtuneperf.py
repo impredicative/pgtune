@@ -2,9 +2,9 @@
 # encoding: utf-8
 
 '''
-pgtune -- postgresql.conf tuner
+pgtune-perf -- postgresql.conf performance tuner
 
-pgtune prints generalized performance-oriented settings for postgresql.conf
+pgtune-perf prints generalized performance optimizations for postgresql.conf
 given the optional inputs max_connections and allocated memory fraction. The
 values can be saved to a file which can be used by postgresql.conf with the
 include directive, as for example:
