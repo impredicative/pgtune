@@ -11,7 +11,7 @@ include directive, as for example:
 
 include 'postgresql.conf.custom'
 
-https://github.com/gittian/pgtune
+https://github.com/impredicative/pgtune-perf
 '''
 
 from __future__ import print_function
