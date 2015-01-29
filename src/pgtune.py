@@ -22,9 +22,7 @@ import collections
 import math
 import os
 
-K = 1024**1
-M = 1024**2
-G = 1024**3
+B, K, M, G = (1024**i for i in range(4))
 
 settings = {
 'mem_total': os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES'),  # bytes
@@ -88,8 +86,11 @@ def tune_conf():
     c['max_connections'] = settings['max_connections']
 
     c['shared_buffers'] = fb(m*.25)  # Not restricted to 8G.
-    c['effective_cache_size'] = fb(m*.625)
-    c['work_mem'] = fb((m*.5) / settings['max_connections'])
+    effective_cache_size = m*.625
+    c['effective_cache_size'] = fb(effective_cache_size)
+    c['work_mem'] = fb(effective_cache_size /
+                       (settings['max_connections'] * 2  # x by active tables
+                        + settings['autovacuum_max_workers']))
     c['maintenance_work_mem'] = fb((m*.25) /  # Not restricted.
                                    (settings['autovacuum_max_workers'] + 2))
 
