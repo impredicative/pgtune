@@ -65,18 +65,9 @@ def parse_args():
                               '({}) to consider '
                               '(default: %(default)s)').format(mem_str))
 
-#     parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter)
-#     parser.add_argument("-r", "--recursive", dest="recurse", action="store_true", help="recurse into subfolders [default: %(default)s]")
-#     parser.add_argument("-v", "--verbose", dest="verbose", action="count", help="set verbosity level [default: %(default)s]")
-#     parser.add_argument("-i", "--include", dest="include", help="only include paths matching this regex pattern. Note: exclude is given preference over include. [default: %(default)s]", metavar="RE" )
-#     parser.add_argument("-e", "--exclude", dest="exclude", help="exclude paths matching this regex pattern. [default: %(default)s]", metavar="RE" )
-#     parser.add_argument('-V', '--version', action='version', version=program_version_message)
-#     parser.add_argument(dest="paths", help="paths to folder(s) with source file(s) [default: %(default)s]", metavar="path", nargs='+')
-
     args = parser.parse_args()
-    for k in ('max_connections', 'mem_fraction'):
-        settings[k] = getattr(args, k)
-
+    for k, v in args._get_kwargs(): settings[k] = v
+    print(settings)
 
 def tune_conf():
 
