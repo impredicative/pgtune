@@ -20,15 +20,27 @@ import collections
 import math
 import os
 
-MEM = os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES')  # in bytes
-MEM_UNITS = ('', 'KB', 'MB', 'GB', 'TB')
+MEM_TOTAL = os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES')  # bytes
 
 
 def format_bytes(n):
 
-    f = int(math.log(n, 1024))  # floor is implicit
-    #f = max(0, f-1)
-    return "{}{}".format(int(n/(1024.**f)), MEM_UNITS[f])
+    units = ('', 'KB', 'MB', 'GB')  # Restricted per section 18.1.1 in v9.2.
+    base = 1024
+    decrement_threshold = 0.2
+    divisor_max = len(units) - 1
+
+    exponent = math.log(n, base) if n > 0 else 0
+    remainder = exponent % 1
+    exponent = int(exponent)  # implicit floor
+
+    decrement = int(0 < remainder < decrement_threshold)
+    divisor = max(0, exponent - decrement)
+    divisor = min(divisor, divisor_max)
+
+    quotient = int(n/(base**divisor))  # implicit floor
+    unit = units[divisor]
+    return "{}{}".format(quotient, unit)
 
 
 def parse_args():
@@ -39,7 +51,7 @@ def parse_args():
                         type=int, default=100,
                         help="minimally necessary maximum connections (default: %(default)s)")
 
-    mem_str = format_bytes(MEM)
+    mem_str = format_bytes(MEM_TOTAL)
     parser.add_argument('-f', '--mem_fraction', dest='mem_fraction',
                         type=float, default=1.0,
                         help="fraction of total physical memory ({}) to use (default: %(default)s)".format(mem_str))
@@ -57,7 +69,7 @@ def parse_args():
 
 def tune_conf(args):
 
-    mem = int(MEM * args.mem_fraction)  # floor is implicit
+    mem_fractional = int(MEM_TOTAL * args.mem_fraction)  # floor is implicit
     conf = c = collections.OrderedDict()
 
     c['max_connections'] = args.max_connections
