@@ -2,16 +2,18 @@
 # encoding: utf-8
 
 '''
-pgtune-perf -- postgresql.conf performance tuner
+pgtune -- postgresql.conf performance tuner
 
-pgtune-perf prints generalized performance optimizations for postgresql.conf
+pgtune prints generalized performance optimizations for postgresql.conf
 given the optional inputs max_connections and allocated memory fraction. The
 values can be saved to a file which can be used by postgresql.conf with the
 include directive, as for example:
+  include 'postgresql.conf.custom'
 
-include 'postgresql.conf.custom'
+For usage help:
+  $ pgtune -h
 
-https://github.com/impredicative/pgtune-perf
+https://github.com/impredicative/pgtune
 '''
 
 from __future__ import print_function
@@ -27,7 +29,7 @@ def format_bytes(n):
 
     units = ('', 'KB', 'MB', 'GB')  # Restricted per section 18.1.1 in v9.2.
     base = 1024
-    decrement_threshold = 0.2
+    decrement_threshold = 0.2  # Experimental
     divisor_max = len(units) - 1
 
     exponent = math.log(n, base) if n > 0 else 0
