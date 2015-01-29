@@ -22,6 +22,10 @@ import collections
 import math
 import os
 
+K = 1024**1
+M = 1024**2
+G = 1024**3
+
 settings = {
 'mem_total': os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES')  # bytes
 }
@@ -59,24 +63,31 @@ def parse_args():
 
     mem_str = format_bytes(settings['mem_total'])
     parser.add_argument('-f', '--mem_fraction', dest='mem_fraction',
-                        type=lambda s: min(1, max(0, float(s))),
+                        type=lambda s: max(0, float(s)),
                         default=1.0,
                         help=('fraction (>0 to 1.0) of total physical memory '
                               '({}) to consider '
                               '(default: %(default)s)').format(mem_str))
 
     args = parser.parse_args()
-    for k, v in args._get_kwargs(): settings[k] = v
-    print(settings)
-
-def tune_conf():
+    for k, v in args._get_kwargs():
+        settings[k] = v
 
     settings['mem_fractional'] = int(settings['mem_total'] *
                                      settings['mem_fraction']) # implicit floor
     settings['mem_fractional'] = max(1, settings['mem_fractional'])
+
+
+def tune_conf():
+
+    m = settings['mem_fractional']
     conf = c = collections.OrderedDict()
+    fb = format_bytes
 
     c['max_connections'] = settings['max_connections']
+
+    c['shared_buffers'] = fb(m*.25)  # Not restricted to 8G.
+    c['effective_cache_size'] = fb(m*.625)
 
     return conf
 
