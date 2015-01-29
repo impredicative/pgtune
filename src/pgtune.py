@@ -27,7 +27,8 @@ M = 1024**2
 G = 1024**3
 
 settings = {
-'mem_total': os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES')  # bytes
+'mem_total': os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES'),  # bytes
+'autovacuum_max_workers': 3  # default in postgresql.conf
 }
 
 
@@ -59,7 +60,7 @@ def parse_args():
                         type=lambda s: max(1, int(s)),
                         default=100,
                         help='minimally necessary maximum connections '
-                             '(default: %(default)s)')
+                             '(default: %(default)s) (min: 1)')
 
     mem_str = format_bytes(settings['mem_total'])
     parser.add_argument('-f', '--mem_fraction', dest='mem_fraction',
@@ -74,8 +75,8 @@ def parse_args():
         settings[k] = v
 
     settings['mem_fractional'] = int(settings['mem_total'] *
-                                     settings['mem_fraction']) # implicit floor
-    settings['mem_fractional'] = max(1, settings['mem_fractional'])
+                                     settings['mem_fraction']
+                                     )  # implicit floor
 
 
 def tune_conf():
@@ -88,6 +89,9 @@ def tune_conf():
 
     c['shared_buffers'] = fb(m*.25)  # Not restricted to 8G.
     c['effective_cache_size'] = fb(m*.625)
+    c['work_mem'] = fb((m*.5) / settings['max_connections'])
+    c['maintenance_work_mem'] = fb((m*.25) /  # Not restricted.
+                                   (settings['autovacuum_max_workers'] + 2))
 
     return conf
 
