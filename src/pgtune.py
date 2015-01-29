@@ -29,7 +29,7 @@ def format_bytes(n):
 
     units = ('', 'KB', 'MB', 'GB')  # Restricted per section 18.1.1 in v9.2.
     base = 1024
-    decrement_threshold = 0.2  # Experimental
+    decrement_threshold = 0.2  # experimental
     divisor_max = len(units) - 1
 
     exponent = math.log(n, base) if n > 0 else 0
@@ -71,7 +71,7 @@ def parse_args():
 
 def tune_conf(args):
 
-    mem_fractional = int(MEM_TOTAL * args.mem_fraction)  # floor is implicit
+    mem_fractional = int(MEM_TOTAL * args.mem_fraction)  # implicit floor
     conf = c = collections.OrderedDict()
 
     c['max_connections'] = args.max_connections
