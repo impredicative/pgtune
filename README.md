@@ -4,6 +4,6 @@ pgtune prints generalized performance optimizations for postgresql.conf given th
 
 include 'postgresql.conf.custom'
 
-For help: $ ./pgtune.py -h
+For help: $ pgtune.py -h
 
 https://github.com/impredicative/pgtune
