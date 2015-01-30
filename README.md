@@ -1,6 +1,6 @@
 # pgtune
 
-**pgtune** prints generalized performance optimizations for `postgresql.conf` given the optional inputs `max_connections` and `mem_fraction`.
+**pgtune** prints generalized performance optimizations for `postgresql.conf` given the optional inputs `max_connections` and `mem_fraction`. The original `postgresql.conf` file is not an input.
 
 For help: `$ pgtune.py -h`
 
