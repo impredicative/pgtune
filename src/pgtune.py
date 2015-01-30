@@ -16,8 +16,8 @@ import os
 B, K, M, G = (1024**i for i in range(4))
 
 settings = {
-'mem_total': os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES'),  # bytes
-'autovacuum_max_workers': 3  # default in postgresql.conf
+'mem_total': os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES'),  # Bytes
+'autovacuum_max_workers': 3  # Default in postgresql.conf.
 }
 
 
@@ -25,7 +25,7 @@ def format_bytes(n):
 
     units = ('', 'kB', 'MB', 'GB')  # Restricted per section 18.1.1 in v9.2.
     base = 1024
-    decrement_threshold = 0.2  # experimental
+    decrement_threshold = 0.2  # Value is experimental.
     divisor_max = len(units) - 1
 
     exponent = math.log(n, base) if n > 0 else 0
@@ -92,7 +92,13 @@ def tune_conf():
     c['checkpoint_timeout'] = '10min'
     c['checkpoint_completion_target'] = 0.8  # 0.9 may risk overlap with next.
 
+    c['wal_buffers'] = '16MB'
+
     c['random_page_cost'] = 2.5
+    c['effective_io_concurrency'] = 4  # Unsure of general optimal value.
+
+    # Note: For bytea_output, per section 8.4 for v9.2, the default value of
+    # 'hex' is faster than 'escape'.
 
     return conf
 
