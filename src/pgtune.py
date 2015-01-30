@@ -93,9 +93,14 @@ def tune_conf():
     c['checkpoint_completion_target'] = 0.8  # 0.9 may risk overlap with next.
 
     c['wal_buffers'] = '16MB'
+    c['wal_writer_delay'] = '10s'
+
+    c['vacuum_cost_delay'] = '50ms'
 
     c['random_page_cost'] = 2.5
-    c['effective_io_concurrency'] = 4  # Unsure of general optimal value.
+    c['effective_io_concurrency'] = 4
+    c['synchronous_commit'] = 'off'
+    c['max_stack_depth'] = '8MB'  # 80% of `ulimit -s` (typically 10240KB)
 
     # Note: For bytea_output, per section 8.4 for v9.2, the default value of
     # 'hex' is faster than 'escape'.
