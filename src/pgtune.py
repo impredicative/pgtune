@@ -76,7 +76,7 @@ def tune_conf():
     mem = settings['mem_fractional']
     bulk_load = settings['bulk_load']
     autovac_workers = 0 if bulk_load else settings['autovacuum_max_workers']
-    
+
     conf = collections.OrderedDict()
     # Note: Parameters below match the category and order in postgresql.conf.
 
@@ -98,6 +98,7 @@ def tune_conf():
     s['effective_io_concurrency'] = 4
 
     conf['WRITE AHEAD LOG'] = s = collections.OrderedDict()
+    if bulk_load: s['wal_level'] = 'minimal'  # Is default but useful anyway.
 #     if bulk_load: s['fsync'] = 'off'  # Unsure if safe.
     s['synchronous_commit'] = 'off'
 #     if bulk_load: s['full_page_writes'] = 'off'  # Unsure if safe.
