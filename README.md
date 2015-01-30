@@ -9,7 +9,7 @@ https://github.com/impredicative/pgtune/
 ## Example
 ### Usage example
 ```
-$ ./pgtune.py -c 32
+$ ./pgtune.py --max_connections=32 --mem_fraction=1.0
 # pgtune configuration for connections=32 and memory=1877MB.
 
 max_connections = 32
