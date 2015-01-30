@@ -13,8 +13,6 @@ import collections
 import math
 import os
 
-B, K, M, G = (1024**i for i in range(4))
-
 settings = {
 'mem_total': os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES'),  # Bytes
 'autovacuum_max_workers': 3  # Default in postgresql.conf.
