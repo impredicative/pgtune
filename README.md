@@ -31,6 +31,7 @@ max_stack_depth = 8MB
 ```
 
 ### Inclusion example
-The printed values can be saved to a file which can be used by postgresql.conf with the include directive, as for example:
+The printed values can be written to a file which can be used by `postgresql.conf` with the *include directive*, as for example:
+
 `include 'postgresql.conf.custom'`
 
