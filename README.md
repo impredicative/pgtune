@@ -4,6 +4,8 @@
 
 For help: `$ pgtune.py -h`
 
+**CAUTION:** This software is experimental. Use of benchmark tests, perhaps with `pgbench`, is advisable.
+
 https://github.com/impredicative/pgtune/
 
 ## Example
