@@ -37,3 +37,6 @@ The printed values can be written to a file which can be used by `postgresql.con
 
 `include 'postgresql.conf.custom'`
 
+## License
+
+See [LICENSE](LICENSE).
