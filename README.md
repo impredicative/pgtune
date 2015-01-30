@@ -26,17 +26,17 @@ optional arguments:
 ## Example
 ### Usage example
 ```
-$ ./pgtune.py --max-connections=32 --mem-fraction=0.5
-# pgtune configuration for connections=32 and memory=938MB.
+$ ./pgtune.py --max-connections=32
+# pgtune configuration for connections=32 and memory=1877MB.
 
 # CONNECTIONS AND AUTHENTICATION
 max_connections = 32
 
 # RESOURCE USAGE (except WAL)
-shared_buffers = 234MB
-temp_buffers = 18MB
-work_mem = 8MB
-maintenance_work_mem = 46MB
+shared_buffers = 469MB
+temp_buffers = 36MB
+work_mem = 17MB
+maintenance_work_mem = 93MB
 max_stack_depth = 8MB
 vacuum_cost_delay = 50ms
 effective_io_concurrency = 4
@@ -51,7 +51,7 @@ checkpoint_completion_target = 0.8
 
 # QUERY TUNING
 random_page_cost = 2.5
-effective_cache_size = 586MB
+effective_cache_size = 1173MB
 ```
 
 ### Inclusion example

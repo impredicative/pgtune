@@ -43,6 +43,11 @@ def parse_args():
 
     parser = argparse.ArgumentParser(description='postgresql.conf tuner')
 
+    parser.add_argument('-b', '--bulk-load', dest='bulk_load',
+                        action='store_true',
+                        help='optimize for temporary use while bulk loading '
+                             '(default: false)')
+
     parser.add_argument('-c', '--max-connections', dest='max_connections',
                         type=lambda s: max(1, int(s)),
                         default=100,
@@ -70,7 +75,6 @@ def tune_conf():
 
     mem = settings['mem_fractional']
     conf = collections.OrderedDict()
-    fb = format_bytes
 
     # Note: Parameters below are intended to be in the category and order in
     # which they appear in postgresql.conf.
@@ -79,15 +83,15 @@ def tune_conf():
     s['max_connections'] = settings['max_connections']
 
     conf['RESOURCE USAGE (except WAL)'] = s = collections.OrderedDict()
-    s['shared_buffers'] = fb(mem*.25)  # Not restricted to 8G.
+    s['shared_buffers'] = format_bytes(mem*.25)  # Not restricted to 8G.
     effective_cache_size = mem*.625
-    s['temp_buffers'] = fb(effective_cache_size /
+    s['temp_buffers'] = format_bytes(effective_cache_size /
                            settings['max_connections'])  # Unsure.
-    s['work_mem'] = fb(effective_cache_size /
+    s['work_mem'] = format_bytes(effective_cache_size /
                        (settings['max_connections'] * 2  # x by active tables.
                         + settings['autovacuum_max_workers']))
-    s['maintenance_work_mem'] = fb((mem*.25) /  # Not restricted.
-                                   (settings['autovacuum_max_workers'] + 2))
+    s['maintenance_work_mem'] = format_bytes((mem*.25) /  # Not restricted.
+                                     (settings['autovacuum_max_workers'] + 2))
     s['max_stack_depth'] = '8MB'  # 80% of `ulimit -s` (typically 10240KB)
     s['vacuum_cost_delay'] = '50ms'
     s['effective_io_concurrency'] = 4
@@ -102,10 +106,17 @@ def tune_conf():
 
     conf['QUERY TUNING'] = s = collections.OrderedDict()
     s['random_page_cost'] = 2.5
-    s['effective_cache_size'] = fb(effective_cache_size)
+    s['effective_cache_size'] = format_bytes(effective_cache_size)
+
+    conf['AUTOVACUUM PARAMETERS'] = s = collections.OrderedDict()
 
     # Note: For bytea_output, per section 8.4 for v9.2, the default value of
     # 'hex' is faster than 'escape'.
+
+    if settings['bulk_load']:
+        conf['WRITE AHEAD LOG']['checkpoint_segments'] = 256
+        conf['WRITE AHEAD LOG']['checkpoint_timeout'] = '15min'
+        conf['AUTOVACUUM PARAMETERS']['autovacuum'] = 'off'
 
     return conf
 
@@ -117,9 +128,10 @@ def print_conf(conf):
                   format_bytes(settings['mem_fractional'])))
 
     for section_name, section in conf.items():
-        print('\n# {}'.format(section_name))
-        for i in section.items():
-            print('{} = {}'.format(*i))
+        if section:
+            print('\n# {}'.format(section_name))
+            for i in section.items():
+                print('{} = {}'.format(*i))
 
 
 def main():
