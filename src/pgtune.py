@@ -68,39 +68,41 @@ def parse_args():
 
 def tune_conf():
 
-    s = settings
-    m = s['mem_fractional']
-    conf = c = collections.OrderedDict()
+    mem = settings['mem_fractional']
+    conf = collections.OrderedDict()
     fb = format_bytes
 
-    # CONNECTIONS AND AUTHENTICATION
-    c['max_connections'] = s['max_connections']
+    # Note: Parameters below are intended to be in the category and order in
+    # which they appear in postgresql.conf.
 
-    # RESOURCE USAGE (except WAL)
-    c['shared_buffers'] = fb(m*.25)  # Not restricted to 8G.
-    effective_cache_size = m*.625
-    c['temp_buffers'] = fb(effective_cache_size /
-                           s['max_connections'])  # Unsure.
-    c['work_mem'] = fb(effective_cache_size /
-                       (s['max_connections'] * 2  # x by est num active tables.
-                        + s['autovacuum_max_workers']))
-    c['maintenance_work_mem'] = fb((m*.25) /  # Not restricted.
-                                   (s['autovacuum_max_workers'] + 2))
-    c['max_stack_depth'] = '8MB'  # 80% of `ulimit -s` (typically 10240KB)
-    c['vacuum_cost_delay'] = '50ms'
-    c['effective_io_concurrency'] = 4
+    conf['CONNECTIONS AND AUTHENTICATION'] = s = collections.OrderedDict()
+    s['max_connections'] = settings['max_connections']
 
-    # WRITE AHEAD LOG
-    c['synchronous_commit'] = 'off'
-    c['wal_buffers'] = '16MB'
-    c['wal_writer_delay'] = '10s'
-    c['checkpoint_segments'] = 64
-    c['checkpoint_timeout'] = '10min'
-    c['checkpoint_completion_target'] = 0.8  # 0.9 may risk overlap with next.
+    conf['RESOURCE USAGE (except WAL)'] = s = collections.OrderedDict()
+    s['shared_buffers'] = fb(mem*.25)  # Not restricted to 8G.
+    effective_cache_size = mem*.625
+    s['temp_buffers'] = fb(effective_cache_size /
+                           settings['max_connections'])  # Unsure.
+    s['work_mem'] = fb(effective_cache_size /
+                       (settings['max_connections'] * 2  # x by active tables.
+                        + settings['autovacuum_max_workers']))
+    s['maintenance_work_mem'] = fb((mem*.25) /  # Not restricted.
+                                   (settings['autovacuum_max_workers'] + 2))
+    s['max_stack_depth'] = '8MB'  # 80% of `ulimit -s` (typically 10240KB)
+    s['vacuum_cost_delay'] = '50ms'
+    s['effective_io_concurrency'] = 4
 
-    # QUERY TUNING
-    c['random_page_cost'] = 2.5
-    c['effective_cache_size'] = fb(effective_cache_size)
+    conf['WRITE AHEAD LOG'] = s = collections.OrderedDict()
+    s['synchronous_commit'] = 'off'
+    s['wal_buffers'] = '16MB'
+    s['wal_writer_delay'] = '10s'
+    s['checkpoint_segments'] = 64
+    s['checkpoint_timeout'] = '10min'
+    s['checkpoint_completion_target'] = 0.8  # 0.9 may risk overlap with next.
+
+    conf['QUERY TUNING'] = s = collections.OrderedDict()
+    s['random_page_cost'] = 2.5
+    s['effective_cache_size'] = fb(effective_cache_size)
 
     # Note: For bytea_output, per section 8.4 for v9.2, the default value of
     # 'hex' is faster than 'escape'.
@@ -110,12 +112,14 @@ def tune_conf():
 
 def print_conf(conf):
 
-    print('# pgtune configuration for connections={} and memory={}.\n'
+    print('# pgtune configuration for connections={} and memory={}.'
           .format(settings['max_connections'],
                   format_bytes(settings['mem_fractional'])))
 
-    for i in conf.items():
-        print('{} = {}'.format(*i))
+    for section_name, section in conf.items():
+        print('\n# {}'.format(section_name))
+        for i in section.items():
+            print('{} = {}'.format(*i))
 
 
 def main():
