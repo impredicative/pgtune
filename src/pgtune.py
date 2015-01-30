@@ -70,20 +70,29 @@ def parse_args():
 
 def tune_conf():
 
-    m = settings['mem_fractional']
+    s = settings
+    m = s['mem_fractional']
     conf = c = collections.OrderedDict()
     fb = format_bytes
 
-    c['max_connections'] = settings['max_connections']
+    c['max_connections'] = s['max_connections']
 
     c['shared_buffers'] = fb(m*.25)  # Not restricted to 8G.
-    effective_cache_size = m*.625
+    effective_cache_size = m*.625  # Reused later.
     c['effective_cache_size'] = fb(effective_cache_size)
+    c['temp_buffers'] = fb(effective_cache_size /
+                           s['max_connections'])  # Unsure.
     c['work_mem'] = fb(effective_cache_size /
-                       (settings['max_connections'] * 2  # x by active tables
-                        + settings['autovacuum_max_workers']))
+                       (s['max_connections'] * 2  # x by est num active tables.
+                        + s['autovacuum_max_workers']))
     c['maintenance_work_mem'] = fb((m*.25) /  # Not restricted.
-                                   (settings['autovacuum_max_workers'] + 2))
+                                   (s['autovacuum_max_workers'] + 2))
+
+    c['checkpoint_segments'] = 64
+    c['checkpoint_timeout'] = '10min'
+    c['checkpoint_completion_target'] = 0.8  # 0.9 may risk overlap with next.
+
+    c['random_page_cost'] = 2.5
 
     return conf
 
