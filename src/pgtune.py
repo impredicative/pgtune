@@ -73,11 +73,12 @@ def tune_conf():
     conf = c = collections.OrderedDict()
     fb = format_bytes
 
+    # CONNECTIONS AND AUTHENTICATION
     c['max_connections'] = s['max_connections']
 
+    # RESOURCE USAGE (except WAL)
     c['shared_buffers'] = fb(m*.25)  # Not restricted to 8G.
-    effective_cache_size = m*.625  # Reused later.
-    c['effective_cache_size'] = fb(effective_cache_size)
+    effective_cache_size = m*.625
     c['temp_buffers'] = fb(effective_cache_size /
                            s['max_connections'])  # Unsure.
     c['work_mem'] = fb(effective_cache_size /
@@ -85,20 +86,21 @@ def tune_conf():
                         + s['autovacuum_max_workers']))
     c['maintenance_work_mem'] = fb((m*.25) /  # Not restricted.
                                    (s['autovacuum_max_workers'] + 2))
+    c['max_stack_depth'] = '8MB'  # 80% of `ulimit -s` (typically 10240KB)
+    c['vacuum_cost_delay'] = '50ms'
+    c['effective_io_concurrency'] = 4
 
+    # WRITE AHEAD LOG
+    c['synchronous_commit'] = 'off'
+    c['wal_buffers'] = '16MB'
+    c['wal_writer_delay'] = '10s'
     c['checkpoint_segments'] = 64
     c['checkpoint_timeout'] = '10min'
     c['checkpoint_completion_target'] = 0.8  # 0.9 may risk overlap with next.
 
-    c['wal_buffers'] = '16MB'
-    c['wal_writer_delay'] = '10s'
-
-    c['vacuum_cost_delay'] = '50ms'
-
+    # QUERY TUNING
     c['random_page_cost'] = 2.5
-    c['effective_io_concurrency'] = 4
-    c['synchronous_commit'] = 'off'
-    c['max_stack_depth'] = '8MB'  # 80% of `ulimit -s` (typically 10240KB)
+    c['effective_cache_size'] = fb(effective_cache_size)
 
     # Note: For bytea_output, per section 8.4 for v9.2, the default value of
     # 'hex' is faster than 'escape'.
