@@ -2,11 +2,26 @@
 
 **pgtune** prints generalized performance optimizations for `postgresql.conf` given the optional inputs `max_connections` and `mem_fraction`. The original `postgresql.conf` file is not an input.
 
-For help: `$ pgtune.py -h`
-
 **CAUTION:** This software is experimental. Use of benchmark tests, perhaps with `pgbench`, is advisable.
 
 https://github.com/impredicative/pgtune/
+
+## Help
+```
+$ ./pgtune.py -h
+usage: pgtune.py [-h] [-c MAX_CONNECTIONS] [-f MEM_FRACTION]
+
+postgresql.conf tuner
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c MAX_CONNECTIONS, --max-connections MAX_CONNECTIONS
+                        minimally necessary maximum connections (default: 100)
+                        (min: 1)
+  -f MEM_FRACTION, --mem-fraction MEM_FRACTION
+                        fraction (>0 to 1.0) of total physical memory (1877MB)
+                        to consider (default: 1.0)
+```
 
 ## Example
 ### Usage example
