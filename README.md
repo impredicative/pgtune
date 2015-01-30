@@ -9,12 +9,13 @@ https://github.com/impredicative/pgtune/
 ## Help
 ```
 $ ./pgtune.py -h
-usage: pgtune.py [-h] [-c MAX_CONNECTIONS] [-f MEM_FRACTION]
+usage: pgtune.py [-h] [-b] [-c MAX_CONNECTIONS] [-f MEM_FRACTION]
 
 postgresql.conf tuner
 
 optional arguments:
   -h, --help            show this help message and exit
+  -b, --bulk-load       for temporary use while bulk loading (default: false)
   -c MAX_CONNECTIONS, --max-connections MAX_CONNECTIONS
                         minimally necessary maximum connections (default: 100)
                         (min: 1)

@@ -45,7 +45,7 @@ def parse_args():
 
     parser.add_argument('-b', '--bulk-load', dest='bulk_load',
                         action='store_true',
-                        help='optimize for temporary use while bulk loading '
+                        help='for temporary use while bulk loading '
                              '(default: false)')
 
     parser.add_argument('-c', '--max-connections', dest='max_connections',
@@ -86,7 +86,7 @@ def tune_conf():
     s['shared_buffers'] = format_bytes(mem*.25)  # Not restricted to 8G.
     effective_cache_size = mem*.625
     s['temp_buffers'] = format_bytes(effective_cache_size /
-                           settings['max_connections'])  # Unsure.
+                                     settings['max_connections'])  # Unsure.
     s['work_mem'] = format_bytes(effective_cache_size /
                        (settings['max_connections'] * 2  # x by active tables.
                         + settings['autovacuum_max_workers']))
@@ -123,8 +123,9 @@ def tune_conf():
 
 def print_conf(conf):
 
-    print('# pgtune configuration for connections={} and memory={}.'
-          .format(settings['max_connections'],
+    print('# pgtune configuration{} with connections={} and memory={}.'
+          .format(' for bulk loading' if settings['bulk_load'] else '',
+                  settings['max_connections'],
                   format_bytes(settings['mem_fractional'])))
 
     for section_name, section in conf.items():
