@@ -1,12 +1,11 @@
 # pgtune
 
-pgtune prints generalized performance optimizations for postgresql.conf given the optional inputs max_connections and memory fraction. The printed values can be saved to a file which can be used by postgresql.conf with the include directive, as for example:
-
-include 'postgresql.conf.custom'
+pgtune prints generalized performance optimizations for postgresql.conf given the optional inputs `max_connections` and `mem_fraction`.
 
 For help: $ pgtune.py -h
 
-Usage example:
+## Example
+### Usage example
 ```
 $ ./pgtune.py -c 32
 # pgtune configuration for connections=32 and memory=1877MB.
@@ -28,5 +27,9 @@ effective_io_concurrency = 4
 synchronous_commit = off
 max_stack_depth = 8MB
 ```
+
+### Include example
+The printed values can be saved to a file which can be used by postgresql.conf with the include directive, as for example:
+`include 'postgresql.conf.custom'`
 
 https://github.com/impredicative/pgtune
