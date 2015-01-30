@@ -39,4 +39,4 @@ The printed values can be written to a file which can be used by `postgresql.con
 
 ## License
 
-See [LICENSE](LICENSE).
+See [license](LICENSE).
