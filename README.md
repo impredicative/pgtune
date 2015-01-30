@@ -11,7 +11,7 @@ https://github.com/impredicative/pgtune/
 ## Example
 ### Usage example
 ```
-$ ./pgtune.py --max_connections=32 --mem_fraction=0.5
+$ ./pgtune.py --max-connections=32 --mem-fraction=0.5
 # pgtune configuration for connections=32 and memory=938MB.
 
 # CONNECTIONS AND AUTHENTICATION

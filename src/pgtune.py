@@ -43,14 +43,14 @@ def parse_args():
 
     parser = argparse.ArgumentParser(description='postgresql.conf tuner')
 
-    parser.add_argument('-c', '--max_connections', dest='max_connections',
+    parser.add_argument('-c', '--max-connections', dest='max_connections',
                         type=lambda s: max(1, int(s)),
                         default=100,
                         help='minimally necessary maximum connections '
                              '(default: %(default)s) (min: 1)')
 
     mem_str = format_bytes(settings['mem_total'])
-    parser.add_argument('-f', '--mem_fraction', dest='mem_fraction',
+    parser.add_argument('-f', '--mem-fraction', dest='mem_fraction',
                         type=lambda s: max(0, float(s)),
                         default=1.0,
                         help=('fraction (>0 to 1.0) of total physical memory '
