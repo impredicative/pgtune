@@ -74,6 +74,8 @@ def parse_args():
 def tune_conf():
 
     mem = settings['mem_fractional']
+    bulk_load = settings['bulk_load']
+    autovac_workers = 0 if bulk_load else settings['autovacuum_max_workers']
     conf = collections.OrderedDict()
 
     # Note: Parameters below are intended to be in the category and order in
@@ -83,25 +85,26 @@ def tune_conf():
     s['max_connections'] = settings['max_connections']
 
     conf['RESOURCE USAGE (except WAL)'] = s = collections.OrderedDict()
-    s['shared_buffers'] = format_bytes(mem*.25)  # Not restricted to 8G.
+    s['shared_buffers'] = format_bytes(mem*.25)  # Not limited to 8G.
     effective_cache_size = mem*.625
     s['temp_buffers'] = format_bytes(effective_cache_size /
                                      settings['max_connections'])  # Unsure.
     s['work_mem'] = format_bytes(effective_cache_size /
-                       (settings['max_connections'] * 2  # x by active tables.
-                        + settings['autovacuum_max_workers']))
-    s['maintenance_work_mem'] = format_bytes((mem*.25) /  # Not restricted.
-                                     (settings['autovacuum_max_workers'] + 2))
+                    (settings['max_connections'] * 2  # x by num active tables.
+                     + autovac_workers))
+    s['maintenance_work_mem'] = format_bytes((mem*.25) /  # No hard limit.
+                                     (autovac_workers + 2))
     s['max_stack_depth'] = '8MB'  # 80% of `ulimit -s` (typically 10240KB)
     s['vacuum_cost_delay'] = '50ms'
     s['effective_io_concurrency'] = 4
 
     conf['WRITE AHEAD LOG'] = s = collections.OrderedDict()
+    if bulk_load: s['fsync'] = 'off'  # Unsure if safe.
     s['synchronous_commit'] = 'off'
     s['wal_buffers'] = '16MB'
     s['wal_writer_delay'] = '10s'
-    s['checkpoint_segments'] = 64
-    s['checkpoint_timeout'] = '10min'
+    s['checkpoint_segments'] = 64 if not bulk_load else 256
+    s['checkpoint_timeout'] = '10min' if not bulk_load else '15min'
     s['checkpoint_completion_target'] = 0.8  # 0.9 may risk overlap with next.
 
     conf['QUERY TUNING'] = s = collections.OrderedDict()
@@ -109,14 +112,10 @@ def tune_conf():
     s['effective_cache_size'] = format_bytes(effective_cache_size)
 
     conf['AUTOVACUUM PARAMETERS'] = s = collections.OrderedDict()
+    if bulk_load: s['autovacuum'] = 'off'
 
     # Note: For bytea_output, per section 8.4 for v9.2, the default value of
     # 'hex' is faster than 'escape'.
-
-    if settings['bulk_load']:
-        conf['WRITE AHEAD LOG']['checkpoint_segments'] = 256
-        conf['WRITE AHEAD LOG']['checkpoint_timeout'] = '15min'
-        conf['AUTOVACUUM PARAMETERS']['autovacuum'] = 'off'
 
     return conf
 
