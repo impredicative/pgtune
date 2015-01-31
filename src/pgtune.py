@@ -98,15 +98,16 @@ def tune_conf():
     s['effective_io_concurrency'] = 4
 
     conf['WRITE AHEAD LOG'] = s = collections.OrderedDict()
-    if bulk_load: s['wal_level'] = 'minimal'  # Is default but useful anyway.
-#     if bulk_load: s['fsync'] = 'off'  # Unsure if safe.
+    if bulk_load: s['wal_level'] = 'minimal'  # Is default.
+    if bulk_load: s['#fsync'] = 'off  # unsafe'
     s['synchronous_commit'] = 'off'
-#     if bulk_load: s['full_page_writes'] = 'off'  # Unsure if safe.
+    if bulk_load: s['#full_page_writes'] = 'off  # unsafe'
     s['wal_buffers'] = '16MB'
     s['wal_writer_delay'] = '10s'
-    s['checkpoint_segments'] = 64 if not bulk_load else 256
-    s['checkpoint_timeout'] = '10min' if not bulk_load else '15min'
+    s['checkpoint_segments'] = 128 if bulk_load else 64
+    s['checkpoint_timeout'] = '15min' if bulk_load else '10min'
     s['checkpoint_completion_target'] = 0.8  # 0.9 may risk overlap with next.
+    if bulk_load: s['archive_mode'] = 'off'  # Consistent with minimal wal.
 
     conf['QUERY TUNING'] = s = collections.OrderedDict()
     s['random_page_cost'] = 2.5
