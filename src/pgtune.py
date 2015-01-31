@@ -99,9 +99,9 @@ def tune_conf():
 
     conf['WRITE AHEAD LOG'] = s = collections.OrderedDict()
     if bulk_load: s['wal_level'] = 'minimal'  # Is default.
-    if bulk_load: s['#fsync'] = 'off  # unsafe'
+    if bulk_load: s['fsync'] = 'off'  # Unsafe.
     s['synchronous_commit'] = 'off'
-    if bulk_load: s['#full_page_writes'] = 'off  # unsafe'
+    if bulk_load: s['full_page_writes'] = 'off'  # Unsafe.
     s['wal_buffers'] = '16MB'
     s['wal_writer_delay'] = '10s'
     s['checkpoint_segments'] = 128 if bulk_load else 64
