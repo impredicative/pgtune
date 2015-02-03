@@ -60,6 +60,13 @@ The printed values can be written to a file which can be used by `postgresql.con
 
 `include 'postgresql.conf.custom'`
 
+## References
+1. [PostgreSQL 9.2.9 Documentation - Chapter 18. Server Configuration](http://www.postgresql.org/docs/9.2/static/runtime-config.html)
+2. [PostgreSQL Wiki - Tuning Your PostgreSQL Server](http://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server)
+3. [PostgreSQL 9.0 High Performance (2010)](http://www.amazon.com/PostgreSQL-High-Performance-Gregory-Smith/dp/184951030X)
+4. [PostgreSQL Proficiency for Python People - PyCon 2014](https://www.youtube.com/watch?v=0uCxLCmzaG4)
+
+
 ## License
 
 See [license](LICENSE).
