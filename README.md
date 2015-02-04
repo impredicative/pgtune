@@ -28,15 +28,15 @@ optional arguments:
 ### Usage example
 ```
 $ ./pgtune.py --max-connections=32
-# pgtune configuration for connections=32 and memory=1877MB.
+# pgtune configuration with connections=32 and memory=1877MB.
 
 # CONNECTIONS AND AUTHENTICATION
 max_connections = 32
 
 # RESOURCE USAGE (except WAL)
 shared_buffers = 469MB
-temp_buffers = 36MB
-work_mem = 17MB
+temp_buffers = 45MB
+work_mem = 21MB
 maintenance_work_mem = 93MB
 max_stack_depth = 8MB
 vacuum_cost_delay = 50ms
@@ -57,8 +57,8 @@ effective_cache_size = 1173MB
 
 ### Bulk loading comparison
 ```
-$ diff -ty --suppress-common-lines -W 60 <(./pgtune.py -c8) <(./pgtune.py --bulk-load -c8) | sed '1d'
-work_mem = 61MB              |  work_mem = 73MB
+$ diff -ty --suppress-common-lines -W 60 <(./pgtune.py -c16) <(./pgtune.py --bulk-load -c16) | sed '1d'
+work_mem = 41MB              |  work_mem = 45MB
 maintenance_work_mem = 93MB  |  maintenance_work_mem = 234MB
                              >  wal_level = minimal
                              >  fsync = off
@@ -80,7 +80,8 @@ The printed values can be written to a file which can be used by `postgresql.con
 1. [PostgreSQL 9.2.9 Documentation - Chapter 18. Server Configuration](http://www.postgresql.org/docs/9.2/static/runtime-config.html)
 2. [PostgreSQL Wiki - Tuning Your PostgreSQL Server](http://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server)
 3. [PostgreSQL 9.0 High Performance (2010)](http://www.amazon.com/PostgreSQL-High-Performance-Gregory-Smith/dp/184951030X)
-4. [PostgreSQL Proficiency for Python People - PyCon 2014](https://www.youtube.com/watch?v=0uCxLCmzaG4)
+4. [PostgreSQL Administration Essentials (2014](http://www.amazon.com/PostgreSQL-Administration-Essentials-Hans-Jurgen-Schonig/dp/1783988983/)
+5. [PostgreSQL Proficiency for Python People - PyCon 2014](https://www.youtube.com/watch?v=0uCxLCmzaG4)
 
 
 ## License
