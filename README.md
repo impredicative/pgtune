@@ -24,7 +24,7 @@ optional arguments:
                         to consider (default: 1.0)
 ```
 
-## Example
+## Examples
 ### Usage example
 ```
 $ ./pgtune.py --max-connections=32
@@ -53,6 +53,22 @@ checkpoint_completion_target = 0.8
 # QUERY TUNING
 random_page_cost = 2.5
 effective_cache_size = 1173MB
+```
+
+### Bulk loading comparison
+```
+$ diff -ty --suppress-common-lines -W 60 <(./pgtune.py -c8) <(./pgtune.py --bulk-load -c8) | sed '1d'
+work_mem = 61MB              |  work_mem = 73MB
+maintenance_work_mem = 93MB  |  maintenance_work_mem = 234MB
+                             >  wal_level = minimal
+                             >  fsync = off
+                             >  full_page_writes = off
+checkpoint_segments = 64     |  checkpoint_segments = 128
+checkpoint_timeout = 10min   |  checkpoint_timeout = 15min
+                             >  archive_mode = off
+                             >
+                             >  # AUTOVACUUM PARAMETERS
+                             >  autovacuum = off
 ```
 
 ### Inclusion example
