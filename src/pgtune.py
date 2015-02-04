@@ -13,6 +13,7 @@ import collections
 import math
 import os
 
+K, M, G = (1024**i for i in range(1, 4))
 settings = {
 'mem_total': os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES'),  # Bytes
 'autovacuum_max_workers': 3  # Default in postgresql.conf.
@@ -76,6 +77,7 @@ def tune_conf():
     mem = settings['mem_fractional']
     bulk_load = settings['bulk_load']
     autovac_workers = 0 if bulk_load else settings['autovacuum_max_workers']
+    used_connections = settings['max_connections'] * 0.8
 
     conf = collections.OrderedDict()
     # Note: Parameters below match the category and order in postgresql.conf.
@@ -84,12 +86,12 @@ def tune_conf():
     s['max_connections'] = settings['max_connections']
 
     conf['RESOURCE USAGE (except WAL)'] = s = collections.OrderedDict()
-    s['shared_buffers'] = format_bytes(mem*.25)  # Not limited to 8G.
+    s['shared_buffers'] = format_bytes(min(mem*.25, 16*G))
     effective_cache_size = mem*.625
     s['temp_buffers'] = format_bytes(effective_cache_size /
-                                     settings['max_connections'])  # Unsure.
+                                     used_connections)  # Unsure.
     s['work_mem'] = format_bytes(effective_cache_size /
-                    (settings['max_connections'] * 2  # x by num active tables.
+                    (used_connections * 2  # x by num active tables.
                      + autovac_workers))
     s['maintenance_work_mem'] = format_bytes((mem*.25) /  # No hard limit.
                                      (autovac_workers + 2))
