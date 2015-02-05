@@ -82,7 +82,7 @@ maintenance_work_mem = 93MB  |  maintenance_work_mem = 234MB
                              >  fsync = off
                              >  full_page_writes = off
 checkpoint_segments = 64     |  checkpoint_segments = 128
-checkpoint_timeout = 10min   |  checkpoint_timeout = 15min
+checkpoint_timeout = 10min   |  checkpoint_timeout = 30min
                              >  archive_mode = off
                              >
                              >  # REPLICATION

@@ -116,7 +116,7 @@ def _conf_dict():
     s['wal_buffers'] = '16MB'
     s['wal_writer_delay'] = '10s'
     s['checkpoint_segments'] = 128 if bulk_load else 64
-    s['checkpoint_timeout'] = '15min' if bulk_load else '10min'
+    s['checkpoint_timeout'] = '30min' if bulk_load else '10min'
     s['checkpoint_completion_target'] = 0.8  # 0.9 may risk overlap with next.
     if bulk_load: s['archive_mode'] = 'off'  # Consistent with minimal wal.
 
