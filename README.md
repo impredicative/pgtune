@@ -25,7 +25,7 @@ optional arguments:
 ```
 
 ## Examples
-### Shell usage
+### Shell usage example
 ```
 $ ./pgtune.py --max-connections=32
 # pgtune configuration with connections=32 and memory=1877MB.
@@ -55,7 +55,7 @@ random_page_cost = 2.5
 effective_cache_size = 1173MB
 ```
 
-### Module usage
+### Module usage example
 ```python
 import pgtune
 pgtune.settings.update({'max_connections': 64, 'mem_fraction': 0.5})
@@ -87,7 +87,7 @@ The printed values can be written to a file which can be used by `postgresql.con
 1. [PostgreSQL 9.2.9 Documentation - Chapter 18. Server Configuration](http://www.postgresql.org/docs/9.2/static/runtime-config.html)
 2. [PostgreSQL Wiki - Tuning Your PostgreSQL Server](http://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server)
 3. [PostgreSQL 9.0 High Performance (2010)](http://www.amazon.com/PostgreSQL-High-Performance-Gregory-Smith/dp/184951030X)
-4. [PostgreSQL Administration Essentials (2014](http://www.amazon.com/PostgreSQL-Administration-Essentials-Hans-Jurgen-Schonig/dp/1783988983/)
+4. [PostgreSQL Administration Essentials (2014)](http://www.amazon.com/PostgreSQL-Administration-Essentials-Hans-Jurgen-Schonig/dp/1783988983/)
 5. [PostgreSQL Proficiency for Python People - PyCon 2014](https://www.youtube.com/watch?v=0uCxLCmzaG4)
 
 
