@@ -69,7 +69,7 @@ effective_cache_size = 1173MB
 ### Module usage
 ```python
 import pgtune
-pgtune.settings.update({'max_connections': 64, 'mem_fraction': 0.5})
+pgtune.settings.update({'max_connections': 64, 'mem_fraction': 0.5, 'bulk_load': False})  # as needed
 print(pgtune.conf_text())
 ```
 
