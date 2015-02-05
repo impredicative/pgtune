@@ -9,7 +9,7 @@ https://github.com/impredicative/pgtune/
 ## Contents
 
 - [Help](#)
-- [Examples](#)
+- [Examples](#examples)
 	- [Shell usage](#)
 	- [Module usage](#)
 	- [Bulk loading comparison](#)
