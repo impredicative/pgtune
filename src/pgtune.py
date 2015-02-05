@@ -15,8 +15,11 @@ import os
 
 K, M, G = (1024**i for i in range(1, 4))
 settings = {
+'bulk_load': False,
+'max_connections': 100,
+'mem_fraction': 1.0,
 'mem_total': os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES'),  # Bytes
-'autovacuum_max_workers': 3  # Default in postgresql.conf.
+'autovacuum_max_workers': 3  # Default value in postgresql.conf.
 }
 
 
@@ -40,7 +43,7 @@ def format_bytes(n):
     return "{}{}".format(quotient, unit)
 
 
-def parse_args():
+def _parse_args():
 
     parser = argparse.ArgumentParser(description='postgresql.conf tuner')
 
@@ -51,28 +54,34 @@ def parse_args():
 
     parser.add_argument('-c', '--max-connections', dest='max_connections',
                         type=lambda s: max(1, int(s)),
-                        default=100,
+                        default=settings['max_connections'],
                         help='minimally necessary maximum connections '
                              '(default: %(default)s) (min: 1)')
 
     mem_str = format_bytes(settings['mem_total'])
     parser.add_argument('-f', '--mem-fraction', dest='mem_fraction',
                         type=lambda s: max(0, float(s)),
-                        default=1.0,
+                        default=settings['mem_fraction'],
                         help=('fraction (>0 to 1.0) of total physical memory '
                               '({}) to consider '
                               '(default: %(default)s)').format(mem_str))
 
     args = parser.parse_args()
+
     for k, v in args._get_kwargs():
         settings[k] = v
+
+
+def _refresh_settings():
 
     settings['mem_fractional'] = int(settings['mem_total'] *
                                      settings['mem_fraction']
                                      )  # implicit floor
 
 
-def tune_conf():
+def _conf_dict():
+
+    _refresh_settings()
 
     mem = settings['mem_fractional']
     bulk_load = settings['bulk_load']
@@ -124,26 +133,31 @@ def tune_conf():
     return conf
 
 
-def print_conf(conf):
+def conf_text():
 
-    print('# pgtune configuration{} with connections={} and memory={}.'
-          .format(' for bulk loading' if settings['bulk_load'] else '',
-                  settings['max_connections'],
-                  format_bytes(settings['mem_fractional'])))
+    _refresh_settings()
+    conf_lines = []
 
-    for section_name, section in conf.items():
+    header = '# pgtune configuration{} with connections={} and memory={}.'
+    conf_lines.append(header.format(' for bulk loading'
+                                    if settings['bulk_load'] else '',
+                                    settings['max_connections'],
+                                    format_bytes(settings['mem_fractional'])))
+
+    for section_name, section in _conf_dict().items():
         if section:
-            print('\n# {}'.format(section_name))
+            conf_lines.append('\n# {}'.format(section_name))
             for i in section.items():
-                print('{} = {}'.format(*i))
+                conf_lines.append('{} = {}'.format(*i))
+
+    return '\n'.join(conf_lines)
 
 
-def main():
+def _main():
 
-    parse_args()
-    conf = tune_conf()
-    print_conf(conf)
+    _parse_args()
+    print(conf_text())
 
 
 if __name__ == "__main__":
-    main()
+    _main()

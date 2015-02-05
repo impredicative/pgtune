@@ -25,7 +25,7 @@ optional arguments:
 ```
 
 ## Examples
-### Usage example
+### Shell usage
 ```
 $ ./pgtune.py --max-connections=32
 # pgtune configuration with connections=32 and memory=1877MB.
@@ -53,6 +53,13 @@ checkpoint_completion_target = 0.8
 # QUERY TUNING
 random_page_cost = 2.5
 effective_cache_size = 1173MB
+```
+
+### Module usage
+```
+import pgtune
+pgtune.settings.update({'max_connections': 64, 'mem_fraction': 0.5})
+print(pgtune.conf_text())
 ```
 
 ### Bulk loading comparison
