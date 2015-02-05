@@ -6,6 +6,17 @@
 
 https://github.com/impredicative/pgtune/
 
+## Contents
+
+- [Help](#)
+- [Examples](#)
+	- [Shell usage](#)
+	- [Module usage](#)
+	- [Bulk loading comparison](#)
+	- [Inclusion](#)
+- [References](#)
+- [License](#)
+
 ## Help
 ```
 $ ./pgtune.py -h
@@ -25,7 +36,7 @@ optional arguments:
 ```
 
 ## Examples
-### Shell usage example
+### Shell usage
 ```
 $ ./pgtune.py --max-connections=32
 # pgtune configuration with connections=32 and memory=1877MB.
@@ -55,7 +66,7 @@ random_page_cost = 2.5
 effective_cache_size = 1173MB
 ```
 
-### Module usage example
+### Module usage
 ```python
 import pgtune
 pgtune.settings.update({'max_connections': 64, 'mem_fraction': 0.5})
@@ -81,7 +92,7 @@ checkpoint_timeout = 10min   |  checkpoint_timeout = 15min
                              >  autovacuum = off
 ```
 
-### Inclusion example
+### Inclusion
 The printed values can be written to a file which can be used by `postgresql.conf` with the *include directive*, as for example:
 
 `include 'postgresql.conf.custom'`
