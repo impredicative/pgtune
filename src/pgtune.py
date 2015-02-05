@@ -72,7 +72,7 @@ def _parse_args():
         settings[k] = v
 
 
-def _refresh_settings():
+def _parse_settings():
 
     settings['mem_fractional'] = int(settings['mem_total'] *
                                      settings['mem_fraction']
@@ -81,7 +81,7 @@ def _refresh_settings():
 
 def _conf_dict():
 
-    _refresh_settings()
+    _parse_settings()
 
     mem = settings['mem_fractional']
     bulk_load = settings['bulk_load']
@@ -109,7 +109,7 @@ def _conf_dict():
     s['effective_io_concurrency'] = 4
 
     conf['WRITE AHEAD LOG'] = s = collections.OrderedDict()
-    if bulk_load: s['wal_level'] = 'minimal'  # Is default.
+    if bulk_load: s['wal_level'] = 'minimal'  # Default.
     if bulk_load: s['fsync'] = 'off'  # Unsafe.
     s['synchronous_commit'] = 'off'
     if bulk_load: s['full_page_writes'] = 'off'  # Unsafe.
@@ -119,6 +119,9 @@ def _conf_dict():
     s['checkpoint_timeout'] = '15min' if bulk_load else '10min'
     s['checkpoint_completion_target'] = 0.8  # 0.9 may risk overlap with next.
     if bulk_load: s['archive_mode'] = 'off'  # Consistent with minimal wal.
+
+    conf['REPLICATION'] = s = collections.OrderedDict()
+    if bulk_load: s['max_wal_senders'] = 0  # Default.
 
     conf['QUERY TUNING'] = s = collections.OrderedDict()
     s['random_page_cost'] = 2.5
@@ -135,7 +138,7 @@ def _conf_dict():
 
 def conf_text():
 
-    _refresh_settings()
+    _parse_settings()
     conf_lines = []
 
     header = '# pgtune configuration{} with connections={} and memory={}.'

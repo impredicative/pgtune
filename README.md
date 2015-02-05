@@ -1,6 +1,6 @@
 # pgtune
 
-**pgtune** prints generalized performance optimizations for `postgresql.conf` given the optional inputs `max_connections` and `mem_fraction`. The original `postgresql.conf` file is not an input.
+**pgtune** prints generalized performance optimizations for `postgresql.conf` for PostgreSQL 9.x, given the optional inputs `max_connections` and `mem_fraction`. The original `postgresql.conf` file is not an input.
 
 **CAUTION:** This software is experimental. Use of benchmark tests, perhaps with `pgbench`, is advisable.
 
@@ -74,6 +74,9 @@ checkpoint_segments = 64     |  checkpoint_segments = 128
 checkpoint_timeout = 10min   |  checkpoint_timeout = 15min
                              >  archive_mode = off
                              >
+                             >  # REPLICATION
+                             >  max_wal_senders = 0
+                             >
                              >  # AUTOVACUUM PARAMETERS
                              >  autovacuum = off
 ```
@@ -84,11 +87,12 @@ The printed values can be written to a file which can be used by `postgresql.con
 `include 'postgresql.conf.custom'`
 
 ## References
-1. [PostgreSQL 9.2.9 Documentation - Chapter 18. Server Configuration](http://www.postgresql.org/docs/9.2/static/runtime-config.html)
-2. [PostgreSQL Wiki - Tuning Your PostgreSQL Server](http://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server)
-3. [PostgreSQL 9.0 High Performance (2010)](http://www.amazon.com/PostgreSQL-High-Performance-Gregory-Smith/dp/184951030X)
-4. [PostgreSQL Administration Essentials (2014)](http://www.amazon.com/PostgreSQL-Administration-Essentials-Hans-Jurgen-Schonig/dp/1783988983/)
-5. [PostgreSQL Proficiency for Python People - PyCon 2014](https://www.youtube.com/watch?v=0uCxLCmzaG4)
+1. [PostgreSQL 9.2 Documentation - Chapter 14. Performance Tips](http://www.postgresql.org/docs/9.2/static/performance-tips.html)
+2. [PostgreSQL 9.2 Documentation - Chapter 18. Server Configuration](http://www.postgresql.org/docs/9.2/static/runtime-config.html)
+3. [PostgreSQL Wiki - Tuning Your PostgreSQL Server](http://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server)
+4. [PostgreSQL 9.0 High Performance (2010)](http://www.amazon.com/PostgreSQL-High-Performance-Gregory-Smith/dp/184951030X)
+5. [PostgreSQL Administration Essentials (2014)](http://www.amazon.com/PostgreSQL-Administration-Essentials-Hans-Jurgen-Schonig/dp/1783988983/)
+6. [PostgreSQL Proficiency for Python People - PyCon 2014](https://www.youtube.com/watch?v=0uCxLCmzaG4)
 
 
 ## License
