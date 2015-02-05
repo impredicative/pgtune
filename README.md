@@ -8,14 +8,14 @@ https://github.com/impredicative/pgtune/
 
 ## Contents
 
-- [Help](#)
+- [Help](#help)
 - [Examples](#examples)
-	- [Shell usage](#)
-	- [Module usage](#)
-	- [Bulk loading comparison](#)
-	- [Inclusion](#)
-- [References](#)
-- [License](#)
+	- [Shell usage](#shell-usage)
+	- [Module usage](#module-usage)
+	- [Bulk loading comparison](#bulk-loading-comparison)
+	- [Inclusion](#inclusion)
+- [References](#references)
+- [License](#license)
 
 ## Help
 ```
