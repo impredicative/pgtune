@@ -1,6 +1,6 @@
 # pgtune
 
-**pgtune** prints generalized performance optimizations for `postgresql.conf` for PostgreSQL 9.x, given the optional inputs `max_connections` and `mem_fraction`. The original `postgresql.conf` file is not an input.
+**pgtune** prints generalized performance optimizations for `postgresql.conf` for PostgreSQL 9.x using the optional inputs `max_connections` and `mem_fraction`. The original `postgresql.conf` file is not an input.
 
 **CAUTION:** This software is experimental. Use of benchmark tests, perhaps with `pgbench`, is advisable.
 
