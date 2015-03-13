@@ -25,7 +25,7 @@ settings = {
 
 def format_bytes(n):
 
-    units = ('', 'kB', 'MB', 'GB')  # Restricted per section 18.1.1 in v9.2.
+    units = ('', 'kB', 'MB', 'GB')  # Restricted per section 18.1.1 in v9.3.
     base = 1024
     decrement_threshold = 0.2  # Value is experimental.
     divisor_max = len(units) - 1
