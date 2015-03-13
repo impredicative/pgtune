@@ -93,9 +93,7 @@ checkpoint_timeout = 10min   |  checkpoint_timeout = 30min
 ```
 
 ### Inclusion
-The printed values can be written to a file which can be used by `postgresql.conf` with the *include directive*, as for example:
-
-`include 'postgresql.tuned.conf'`
+The printed values can be written to a file which can be used by `postgresql.conf` with an `include` directive or more preferably an `include_dir` directive.
 
 ## References
 1. [PostgreSQL 9.3 Documentation: Chapter 14. Performance Tips](http://www.postgresql.org/docs/9.3/static/performance-tips.html)
