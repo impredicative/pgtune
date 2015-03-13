@@ -98,8 +98,8 @@ The printed values can be written to a file which can be used by `postgresql.con
 `include 'postgresql.tuned.conf'`
 
 ## References
-1. [PostgreSQL 9.2 Documentation - Chapter 14. Performance Tips](http://www.postgresql.org/docs/9.2/static/performance-tips.html)
-2. [PostgreSQL 9.2 Documentation - Chapter 18. Server Configuration](http://www.postgresql.org/docs/9.2/static/runtime-config.html)
+1. [PostgreSQL 9.3 Documentation: Chapter 14. Performance Tips](http://www.postgresql.org/docs/9.3/static/performance-tips.html)
+2. [PostgreSQL 9.3 Documentation: Chapter 18. Server Configuration](http://www.postgresql.org/docs/9.3/static/runtime-config.html)
 3. [PostgreSQL Wiki - Tuning Your PostgreSQL Server](http://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server)
 4. [PostgreSQL 9.0 High Performance (2010)](http://www.amazon.com/PostgreSQL-High-Performance-Gregory-Smith/dp/184951030X)
 5. [PostgreSQL Administration Essentials (2014)](http://www.amazon.com/PostgreSQL-Administration-Essentials-Hans-Jurgen-Schonig/dp/1783988983/)
