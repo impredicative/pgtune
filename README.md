@@ -103,7 +103,5 @@ The printed values can be written to a file which can be used by `postgresql.con
 5. [PostgreSQL Administration Essentials (2014)](http://www.amazon.com/PostgreSQL-Administration-Essentials-Hans-Jurgen-Schonig/dp/1783988983/)
 6. [PostgreSQL Proficiency for Python People - PyCon 2014](https://www.youtube.com/watch?v=0uCxLCmzaG4)
 
-
 ## License
-
 See [license](LICENSE).
