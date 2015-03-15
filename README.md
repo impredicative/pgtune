@@ -7,7 +7,6 @@
 https://github.com/impredicative/pgtune/
 
 ## Contents
-
 - [Help](#help)
 - [Examples](#examples)
 	- [Shell usage](#shell-usage)
