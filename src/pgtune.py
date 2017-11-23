@@ -124,7 +124,7 @@ def _conf_dict():
     if bulk_load: s['max_wal_senders'] = 0  # Default.
 
     conf['QUERY TUNING'] = s = collections.OrderedDict()
-    s['random_page_cost'] = 2.5
+    s['random_page_cost'] = 2.0
     s['effective_cache_size'] = format_bytes(effective_cache_size)
 
     conf['AUTOVACUUM PARAMETERS'] = s = collections.OrderedDict()
